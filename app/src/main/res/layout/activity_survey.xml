@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+        <LinearLayout
+            android:id="@+id/firstRel"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight=".33"
+            android:gravity="center"
+            android:onClick="firstRelClick"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/firstStatusimg"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:src="@drawable/first" />
+
+            <TextView
+                android:id="@+id/firstStatusTv"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:text="jddfdkfdffj"
+                android:textColor="@color/colorAccent"
+                android:textSize="25sp" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/secondRel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:onClick="secondRelClick"
+
+            android:layout_weight=".33">
+
+            <ImageView
+                android:id="@+id/secondStatusimg"
+                android:layout_width="wrap_content"
+
+                android:layout_height="250dp"
+                android:src="@drawable/second" />
+
+            <TextView
+                android:id="@+id/secondStatusTv"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+
+                android:layout_below="@+id/secondStatusimg"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:text="jddfdkfdffj"
+                android:textColor="@color/colorAccent"
+                android:textSize="25sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/thirdRel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:onClick="thirdRelClick"
+
+            android:layout_weight=".33">
+
+            <ImageView
+                android:id="@+id/thirdStatusimg"
+                android:layout_width="wrap_content"
+                android:layout_height="250dp"
+
+                android:src="@drawable/third" />
+
+            <TextView
+                android:id="@+id/thirdStatusTv"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_below="@+id/thirdStatusimg"
+                android:layout_marginTop="20dp"
+
+                android:gravity="center"
+                android:text="jddfdkfdffj"
+                android:textColor="@color/colorAccent"
+                android:textSize="25sp" />
+        </RelativeLayout>
+    </LinearLayout>
+
+
+</android.support.constraint.ConstraintLayout>
