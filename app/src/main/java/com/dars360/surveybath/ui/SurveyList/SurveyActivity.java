@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.dars360.surveybath.R;
@@ -51,6 +52,7 @@ public class SurveyActivity extends AppCompatActivity implements IActiveSurveyVi
                     WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
             );
         }*/
+
         activeSurveyPresenter = new ActiveSurveyPresenter(this);
         getActiveSurvey();
         intent = new Intent(this, SurveyOptionActivity.class);
@@ -91,7 +93,12 @@ public class SurveyActivity extends AppCompatActivity implements IActiveSurveyVi
     }
 
     @Override
-    public void failedGetSurvey() {
+    public void failedGetSurvey(String messege) {
+        if (messege != null) {
+            if (messege.contains("Failed to connect"))
+                Toast.makeText(this, getResources().getString(R.string.checkInternet), Toast.LENGTH_SHORT).show();
+
+        }
 
     }
 
@@ -101,22 +108,28 @@ public class SurveyActivity extends AppCompatActivity implements IActiveSurveyVi
     }
 
     public void thirdRelClick(View view) {
-        intent.putExtra(SurveyConstants.surveyRating, SurveyRatingList.get(2));
+        if (SurveyRatingList != null)
+            intent.putExtra(SurveyConstants.surveyRating, SurveyRatingList.get(2));
         navigateTo();
     }
 
     public void secondRelClick(View view) {
-        intent.putExtra(SurveyConstants.surveyRating, SurveyRatingList.get(1));
+        if (SurveyRatingList != null)
+
+            intent.putExtra(SurveyConstants.surveyRating, SurveyRatingList.get(1));
         navigateTo();
     }
 
     public void firstRelClick(View view) {
-        intent.putExtra(SurveyConstants.surveyRating, SurveyRatingList.get(0));
+        if (SurveyRatingList != null)
+
+            intent.putExtra(SurveyConstants.surveyRating, SurveyRatingList.get(0));
         navigateTo();
     }
 
     public void navigateTo() {
+        if (SurveyRatingList != null)
 
-        startActivity(intent);
+            startActivity(intent);
     }
 }

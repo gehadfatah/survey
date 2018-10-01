@@ -7,4 +7,8 @@ import java.util.ArrayList;
 public interface ISurveyOptionList {
     void successOptionList(ArrayList<GetRatingOptionListResponse> RatingOptionList);
     void failedOptionList();
+
+    void successPostRating();
+    void failedPostRating();
+
 }

@@ -50,7 +50,7 @@ public class ActiveSurveyPresenter implements CallBackJSONArray {
     @Override
     public void onSuccessArray(Response<JsonArray> o) {
         if (o.code() == 200) {
-            if (o.raw().request().url().toString().equals("http://api.temp.web.darsint.arvixededicated.com/survey/getactivesurvey/")) {
+            if (o.raw().request().url().toString().equals("http://api.temp.web.darsint.arvixededicated.com/survey/getactivesurvey")) {
 
                 Gson gson = new Gson();
                 Type listType = new TypeToken<List<GetActiveSurveyResponse>>() {
@@ -58,7 +58,7 @@ public class ActiveSurveyPresenter implements CallBackJSONArray {
                 ArrayList<GetActiveSurveyResponse> surveyList = gson.fromJson(o.body().toString(), listType);
 
                 iActiveSurveyView.successGetSurvey(surveyList);
-            } else/* if (o.raw().request().url().toString().equals("http://api.temp.web.darsint.arvixededicated.com/survey/GetSurveyRatingList/"))*/ {
+            } else/* if (o.raw().request().url().toString().contains("http://api.temp.web.darsint.arvixededicated.com/survey/GetSurveyRatingList"))*/ {
                 Gson gson = new Gson();
                 Type listType = new TypeToken<List<GetSurveyRatingListResponse>>() {
                 }.getType();
@@ -72,5 +72,7 @@ public class ActiveSurveyPresenter implements CallBackJSONArray {
     @Override
     public void OnFailArray(Throwable o) {
         Log.d("d", "OnFailArray: ");
+        iActiveSurveyView.failedGetSurvey(o.getMessage());
+
     }
 }

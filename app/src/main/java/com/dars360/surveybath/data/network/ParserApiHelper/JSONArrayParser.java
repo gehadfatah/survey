@@ -69,4 +69,10 @@ public class JSONArrayParser implements Callback<JsonArray> {
         Call<JsonArray> jsonArrayCall = retrofitInterface.getArrayRatingData(url, ratingId);
         jsonArrayCall.enqueue(this);
     }
+
+    public void setRating(RestClientRetrofit.RetrofitInterface retrofitInterface, String url, Integer ratingId) {
+        Call<JsonArray> jsonArrayCall = retrofitInterface.getArrayRatingData(url, ratingId);
+        jsonArrayCall.enqueue(this);
+
+    }
 }

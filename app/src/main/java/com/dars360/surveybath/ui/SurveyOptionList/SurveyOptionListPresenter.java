@@ -41,10 +41,17 @@ public class SurveyOptionListPresenter implements CallBackJSONArray {
 
     }
 
+    public void sendSurveyRating(Integer ratingId) {
+        JSONArrayParser parser = new JSONArrayParser(this);
+
+        parser.setRating(retrofitInterface, mContext.getString(R.string.setRating), ratingId);
+
+    }
+
     @Override
     public void onSuccessArray(Response<JsonArray> o) {
         if (o.code() == 200) {
-           // if (o.raw().request().url().toString().equals("http://api.temp.web.darsint.arvixededicated.com/survey/GetRatingOptionList/")) {
+            if (o.raw().request().url().toString().contains("http://api.temp.web.darsint.arvixededicated.com/survey/GetRatingOptionList")) {
 
                 Gson gson = new Gson();
                 Type listType = new TypeToken<List<GetRatingOptionListResponse>>() {
@@ -52,8 +59,15 @@ public class SurveyOptionListPresenter implements CallBackJSONArray {
                 ArrayList<GetRatingOptionListResponse> RatingOptionList = gson.fromJson(o.body().toString(), listType);
 
                 ISurveyOptionList.successOptionList(RatingOptionList);
+            } else if (o.raw().request().url().toString().contains("http://api.temp.web.darsint.arvixededicated.com/survey/LogEntry")) {
+                Gson gson = new Gson();
+                Type listType = new TypeToken<List<GetRatingOptionListResponse>>() {
+                }.getType();
+                // ArrayList<GetRatingOptionListResponse> RatingOptionList = gson.fromJson(o.body().toString(), listType);
+
+                ISurveyOptionList.successPostRating();
             }
-       // }
+        }
     }
 
     @Override

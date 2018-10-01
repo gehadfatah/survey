@@ -10,5 +10,5 @@ public interface IActiveSurveyView {
 
     void successGetSurveyList(ArrayList<GetSurveyRatingListResponse> SurveyRatingList);
 
-    void failedGetSurvey();
+    void failedGetSurvey(String messege);
 }

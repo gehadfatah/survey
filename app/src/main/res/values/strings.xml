@@ -1,8 +1,10 @@
 <resources>
     <string name="app_name">SurveyBath</string>
     <string name="base_url">http://api.temp.web.darsint.arvixededicated.com/survey/</string>
-    <string name="active_survey_url">getactivesurvey/</string>
-    <string name="SurveyRatingList_url">GetSurveyRatingList/</string>
-    <string name="RatingOptionList_url">GetRatingOptionList/</string>
+    <string name="active_survey_url">getactivesurvey</string>
+    <string name="SurveyRatingList_url">GetSurveyRatingList</string>
+    <string name="RatingOptionList_url">GetRatingOptionList</string>
+    <string name="setRating">LogEntry</string>
     <string name="selectFace">selectFace</string>
+    <string name="checkInternet">please check internet</string>
 </resources>
