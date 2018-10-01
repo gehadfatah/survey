@@ -47,7 +47,12 @@ public class SurveyOptionListPresenter implements CallBackJSONArray {
         parser.setRating(retrofitInterface, mContext.getString(R.string.setRating), ratingId);
 
     }
+    public void sendSurveyRatingWithReason(Integer ratingId) {
+        JSONArrayParser parser = new JSONArrayParser(this);
 
+        parser.setRating(retrofitInterface, mContext.getString(R.string.setRating), ratingId);
+
+    }
     @Override
     public void onSuccessArray(Response<JsonArray> o) {
         if (o.code() == 200) {

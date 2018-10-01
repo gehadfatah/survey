@@ -1,6 +1,8 @@
 package com.dars360.surveybath.ui.SurveyOptionList;
 
+import android.annotation.SuppressLint;
 import android.os.Build;
+import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,6 +21,7 @@ import com.dars360.surveybath.R;
 import com.dars360.surveybath.dataModels.GetRatingOptionListResponse;
 import com.dars360.surveybath.dataModels.GetSurveyRatingListResponse;
 import com.dars360.surveybath.utils.SurveyConstants;
+import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -29,6 +32,7 @@ public class SurveyOptionActivity extends AppCompatActivity implements ISurveyOp
     GetSurveyRatingListResponse statesUser;
     RadioGroup rgp;
     EditText otherEd;
+    EditText otherEdNum;
     TextView tvQuestion;
     Button sendButton;
 
@@ -41,6 +45,7 @@ public class SurveyOptionActivity extends AppCompatActivity implements ISurveyOp
         rgp = findViewById(R.id.groupView);
         sendButton = findViewById(R.id.sendButton);
         otherEd = findViewById(R.id.otherEd);
+        otherEdNum = findViewById(R.id.otherEdNum);
         tvQuestion = findViewById(R.id.tvQuestion);
         surveyOptionListPresenter = new SurveyOptionListPresenter(this);
 
@@ -51,6 +56,7 @@ public class SurveyOptionActivity extends AppCompatActivity implements ISurveyOp
 
             rgp.setOrientation(LinearLayout.VERTICAL);
             otherEd.setVisibility(View.INVISIBLE);
+            otherEdNum.setVisibility(View.INVISIBLE);
             tvQuestion.setText("لماذا الخدمة غير جيدة؟");
 
         } else if (statesUser != null) {
@@ -58,6 +64,13 @@ public class SurveyOptionActivity extends AppCompatActivity implements ISurveyOp
             tvQuestion.setText("شكرا لرايك");
             sendButton.setVisibility(View.INVISIBLE);
             surveyOptionListPresenter.sendSurveyRating(statesUser.getID());
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    finish();
+                }
+            }, 1000);
         }
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,15 +78,31 @@ public class SurveyOptionActivity extends AppCompatActivity implements ISurveyOp
                 int radioSelected = rgp.getCheckedRadioButtonId();
                 if (radioSelected == 20) {
                     //other
+                    // JsonObject jsonObject=new JsonObject();
+                    // jsonObject.addProperty();
+                    otherEdNum.getText();
+                    otherEd.getText();
+                    surveyOptionListPresenter.sendSurveyRatingWithReason(statesUser.getID());
 
-                }else {
+                } else {
 
                 }
+                rgp.setVisibility(View.INVISIBLE);
+                tvQuestion.setText("شكرا لرايك");
+                sendButton.setVisibility(View.INVISIBLE);
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        finish();
+                    }
+                }, 1000);
             }
         });
 
     }
 
+    @SuppressLint("ResourceType")
     @Override
     public void successOptionList(ArrayList<GetRatingOptionListResponse> RatingOptionList) {
         final int buttons = RatingOptionList.size();
@@ -100,11 +129,13 @@ public class SurveyOptionActivity extends AppCompatActivity implements ISurveyOp
 
                     if (finalI == buttons) {
                         otherEd.setVisibility(View.VISIBLE);
-                        otherEd.setHint("اكتب السبب");
+                        otherEdNum.setVisibility(View.VISIBLE);
+                        // otherEd.setHint("اكتب السبب");
                         //  rgp.clearCheck();
                         //rbn.setChecked(true);
                     } else {
                         otherEd.setVisibility(View.INVISIBLE);
+                        otherEdNum.setVisibility(View.INVISIBLE);
 
                     }
                     rgp.clearCheck();
