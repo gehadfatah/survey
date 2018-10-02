@@ -95,6 +95,17 @@ public class RestClientRetrofit {
                 "content-type: application/json"})
         @GET
         Call<JsonArray> getArrayRatingData(@Url String url, @Query("Rating_ID") Integer Rating_ID);
+
+        @Headers({
+                "content-type: application/json"})
+        @POST
+        Call<String> postArrayRatingData(@Url String url, @Query("Rating_ID") Integer Rating_ID);
+
+        @Headers({
+                "content-type: application/json"})
+        @POST
+        Call<String> setArrayRatingDataWithOption(@Url String url, @Query("Rating_ID") Integer Rating_ID, @Query("Option_ID") String Option_ID, @Query("comment") String comment, @Query("Mobile_No") String Mobile_No);
+
     }
 }
 

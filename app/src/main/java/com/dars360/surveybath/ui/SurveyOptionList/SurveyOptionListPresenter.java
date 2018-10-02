@@ -6,7 +6,9 @@ import android.util.Log;
 import com.dars360.surveybath.R;
 import com.dars360.surveybath.SurveyApp;
 import com.dars360.surveybath.data.network.Interfaces.CallBackJSONArray;
+import com.dars360.surveybath.data.network.Interfaces.CallBackString;
 import com.dars360.surveybath.data.network.ParserApiHelper.JSONArrayParser;
+import com.dars360.surveybath.data.network.ParserApiHelper.StringParser;
 import com.dars360.surveybath.data.network.RestClientRetrofit;
 import com.dars360.surveybath.dataModels.GetActiveSurveyResponse;
 import com.dars360.surveybath.dataModels.GetRatingOptionListResponse;
@@ -21,7 +23,7 @@ import java.util.List;
 
 import retrofit2.Response;
 
-public class SurveyOptionListPresenter implements CallBackJSONArray {
+public class SurveyOptionListPresenter implements CallBackJSONArray, CallBackString {
     Context mContext;
     private RestClientRetrofit.RetrofitInterface retrofitInterface;
     ISurveyOptionList ISurveyOptionList;
@@ -42,17 +44,21 @@ public class SurveyOptionListPresenter implements CallBackJSONArray {
     }
 
     public void sendSurveyRating(Integer ratingId) {
-        JSONArrayParser parser = new JSONArrayParser(this);
+        //   JSONArrayParser parser = new JSONArrayParser(this);
+        StringParser parser = new StringParser(this);
 
         parser.setRating(retrofitInterface, mContext.getString(R.string.setRating), ratingId);
 
     }
-    public void sendSurveyRatingWithReason(Integer ratingId) {
-        JSONArrayParser parser = new JSONArrayParser(this);
 
-        parser.setRating(retrofitInterface, mContext.getString(R.string.setRating), ratingId);
+    public void sendSurveyRatingWithReason(Integer ratingId, String  optionId, String comment, String mobileNum) {
+        //   JSONArrayParser parser = new JSONArrayParser(this);
+        StringParser parser = new StringParser(this);
+
+        parser.setRatingWithReason(retrofitInterface, mContext.getString(R.string.setRating), ratingId, optionId, comment, mobileNum);
 
     }
+
     @Override
     public void onSuccessArray(Response<JsonArray> o) {
         if (o.code() == 200) {
@@ -64,7 +70,20 @@ public class SurveyOptionListPresenter implements CallBackJSONArray {
                 ArrayList<GetRatingOptionListResponse> RatingOptionList = gson.fromJson(o.body().toString(), listType);
 
                 ISurveyOptionList.successOptionList(RatingOptionList);
-            } else if (o.raw().request().url().toString().contains("http://api.temp.web.darsint.arvixededicated.com/survey/LogEntry")) {
+            }
+        }
+    }
+
+    @Override
+    public void OnFailArray(Throwable o) {
+        Log.d("d", "OnFailArray: ");
+        ISurveyOptionList.failedOptionList();
+    }
+
+    @Override
+    public void onSuccessObject(Response<String> o) {
+        if (o.code() == 200) {
+            if (o.raw().request().url().toString().contains("http://api.temp.web.darsint.arvixededicated.com/survey/LogEntry")) {
                 Gson gson = new Gson();
                 Type listType = new TypeToken<List<GetRatingOptionListResponse>>() {
                 }.getType();
@@ -76,8 +95,8 @@ public class SurveyOptionListPresenter implements CallBackJSONArray {
     }
 
     @Override
-    public void OnFailArray(Throwable o) {
+    public void OnFailObject(Throwable o) {
         Log.d("d", "OnFailArray: ");
-
+        ISurveyOptionList.failedPostRating();
     }
 }

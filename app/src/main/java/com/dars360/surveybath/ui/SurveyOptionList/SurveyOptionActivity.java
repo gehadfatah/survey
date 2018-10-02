@@ -7,7 +7,9 @@ import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -20,11 +22,15 @@ import android.widget.Toast;
 import com.dars360.surveybath.R;
 import com.dars360.surveybath.dataModels.GetRatingOptionListResponse;
 import com.dars360.surveybath.dataModels.GetSurveyRatingListResponse;
+import com.dars360.surveybath.utils.DeviceDimensionsUtils;
 import com.dars360.surveybath.utils.SurveyConstants;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 import java.util.Objects;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class SurveyOptionActivity extends AppCompatActivity implements ISurveyOptionList {
     private static final String TAG = "SurveyOptionActivity";
@@ -35,12 +41,17 @@ public class SurveyOptionActivity extends AppCompatActivity implements ISurveyOp
     EditText otherEdNum;
     TextView tvQuestion;
     Button sendButton;
+    @BindView(R.id.dummy_id)
+    LinearLayout dummy;
+    @BindView(R.id.finishText)
+    TextView finishText;
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_survey_option);
+        ButterKnife.bind(this);
         statesUser = Objects.requireNonNull(getIntent().getExtras()).getParcelable(SurveyConstants.surveyRating);
         rgp = findViewById(R.id.groupView);
         sendButton = findViewById(R.id.sendButton);
@@ -48,6 +59,8 @@ public class SurveyOptionActivity extends AppCompatActivity implements ISurveyOp
         otherEdNum = findViewById(R.id.otherEdNum);
         tvQuestion = findViewById(R.id.tvQuestion);
         surveyOptionListPresenter = new SurveyOptionListPresenter(this);
+        //setMarginTop(tvQuestion, 0);
+        dummy.requestFocus();
 
         if (statesUser != null && statesUser.getHasOptions()) {
             rgp.setVisibility(View.VISIBLE);
@@ -55,14 +68,26 @@ public class SurveyOptionActivity extends AppCompatActivity implements ISurveyOp
             surveyOptionListPresenter.getSurveyRatingList(statesUser.getID());
 
             rgp.setOrientation(LinearLayout.VERTICAL);
-            otherEd.setVisibility(View.INVISIBLE);
-            otherEdNum.setVisibility(View.INVISIBLE);
+            // otherEd.setVisibility(View.INVISIBLE);
+            //  otherEdNum.setVisibility(View.INVISIBLE);
+            sendButton.setVisibility(View.VISIBLE);
+            otherEd.setVisibility(View.VISIBLE);
+
+            otherEdNum.setVisibility(View.VISIBLE);
             tvQuestion.setText("لماذا الخدمة غير جيدة؟");
 
         } else if (statesUser != null) {
             rgp.setVisibility(View.INVISIBLE);
             tvQuestion.setText("شكرا لرايك");
+            // setMarginTop(tvQuestion, DeviceDimensionsUtils.getDisplayHeight(this) / 2);
+            //setGravity(tvQuestion);
+            finishText.setVisibility(View.VISIBLE);
             sendButton.setVisibility(View.INVISIBLE);
+            otherEd.setVisibility(View.INVISIBLE);
+            tvQuestion.setVisibility(View.INVISIBLE);
+
+            otherEdNum.setVisibility(View.INVISIBLE);
+
             surveyOptionListPresenter.sendSurveyRating(statesUser.getID());
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
@@ -70,35 +95,53 @@ public class SurveyOptionActivity extends AppCompatActivity implements ISurveyOp
                 public void run() {
                     finish();
                 }
-            }, 1000);
+            }, 2000);
         }
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int radioSelected = rgp.getCheckedRadioButtonId();
-                if (radioSelected == 20) {
-                    //other
-                    // JsonObject jsonObject=new JsonObject();
-                    // jsonObject.addProperty();
-                    otherEdNum.getText();
-                    otherEd.getText();
-                    surveyOptionListPresenter.sendSurveyRatingWithReason(statesUser.getID());
-
-                } else {
-
+                String radioSelected = String.valueOf(rgp.getCheckedRadioButtonId());
+                if (radioSelected.equals("-1")) {
+                    radioSelected = "";
                 }
+                surveyOptionListPresenter.sendSurveyRatingWithReason(statesUser.getID(), radioSelected, otherEd.getText().toString(), otherEdNum.getText().toString());
                 rgp.setVisibility(View.INVISIBLE);
                 tvQuestion.setText("شكرا لرايك");
+                finishText.setVisibility(View.VISIBLE);
+                tvQuestion.setVisibility(View.INVISIBLE);
+                //setMarginTop(tvQuestion, DeviceDimensionsUtils.getDisplayHeight(SurveyOptionActivity.this) / 2);
+                //setGravity(tvQuestion);
+                // sendButton.setVisibility(View.INVISIBLE);
                 sendButton.setVisibility(View.INVISIBLE);
+                otherEd.setVisibility(View.INVISIBLE);
+
+                otherEdNum.setVisibility(View.INVISIBLE);
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         finish();
                     }
-                }, 1000);
+                }, 2000);
             }
         });
+
+    }
+
+    public void setMarginTop(View v, int top) {
+        ViewGroup.MarginLayoutParams params =
+                (ViewGroup.MarginLayoutParams) v.getLayoutParams();
+        params.setMargins(params.leftMargin, top,
+                params.rightMargin, params.bottomMargin);
+        v.setLayoutParams(params);
+
+
+    }
+
+    public void setGravity(View v) {
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.FILL_PARENT);
+        params.gravity = Gravity.CENTER;
+        v.setLayoutParams(params);
 
     }
 
@@ -106,17 +149,19 @@ public class SurveyOptionActivity extends AppCompatActivity implements ISurveyOp
     @Override
     public void successOptionList(ArrayList<GetRatingOptionListResponse> RatingOptionList) {
         final int buttons = RatingOptionList.size();
-        for (int i = 0; i < buttons + 1; i++) {
+        for (int i = 0; i < buttons; i++) {
             final CompoundButton rbn = new RadioButton(this);
 
-            if (i == buttons) {
+           /* if (i == buttons) {
                 rbn.setText("اخري");
                 rbn.setId(20);
 
             } else {
                 rbn.setId(RatingOptionList.get(i).getID());
                 rbn.setText(RatingOptionList.get(i).getTitle());
-            }
+            }*/
+            rbn.setId(RatingOptionList.get(i).getID());
+            rbn.setText(RatingOptionList.get(i).getTitle());
             //rbn.setMaxLines(1);
 
 
@@ -127,7 +172,7 @@ public class SurveyOptionActivity extends AppCompatActivity implements ISurveyOp
                 public void onClick(View v) {
 
 
-                    if (finalI == buttons) {
+              /*      if (finalI == buttons) {
                         otherEd.setVisibility(View.VISIBLE);
                         otherEdNum.setVisibility(View.VISIBLE);
                         // otherEd.setHint("اكتب السبب");
@@ -139,8 +184,8 @@ public class SurveyOptionActivity extends AppCompatActivity implements ISurveyOp
 
                     }
                     rgp.clearCheck();
-                    rbn.setChecked(true);
-                    sendButton.setVisibility(View.VISIBLE);
+                    rbn.setChecked(true);*/
+                    // sendButton.setVisibility(View.VISIBLE);
 
                 }
             });

@@ -47,7 +47,22 @@ public class JSONArrayParser implements Callback<JsonArray> {
         Call<JsonArray> jsonArrayCall = retrofitInterface.getArraySurveyData(url, surveyId);
         jsonArrayCall.enqueue(this);
     }
+    public void getRatingList(RestClientRetrofit.RetrofitInterface retrofitInterface, String url, Integer ratingId) {
+        Call<JsonArray> jsonArrayCall = retrofitInterface.getArrayRatingData(url, ratingId);
+        jsonArrayCall.enqueue(this);
+    }
 
+  /*  public void setRating(RestClientRetrofit.RetrofitInterface retrofitInterface, String url, Integer ratingId) {
+        Call<JsonArray> jsonArrayCall = retrofitInterface.postArrayRatingData(url, ratingId);
+        jsonArrayCall.enqueue(this);
+
+    }
+
+    public void setRatingWithReason(RestClientRetrofit.RetrofitInterface retrofitInterface, String url, Integer ratingId,Integer optionId, String comment, String mobileNum) {
+        Call<JsonArray> jsonArrayCall = retrofitInterface.setArrayRatingDataWithOption(url, ratingId, optionId,comment, mobileNum);
+        jsonArrayCall.enqueue(this);
+
+    }*/
     //=================================================================
     // DefaultResponse CallBack for success response
     //=================================================================
@@ -65,14 +80,5 @@ public class JSONArrayParser implements Callback<JsonArray> {
     }
 
 
-    public void getRatingList(RestClientRetrofit.RetrofitInterface retrofitInterface, String url, Integer ratingId) {
-        Call<JsonArray> jsonArrayCall = retrofitInterface.getArrayRatingData(url, ratingId);
-        jsonArrayCall.enqueue(this);
-    }
 
-    public void setRating(RestClientRetrofit.RetrofitInterface retrofitInterface, String url, Integer ratingId) {
-        Call<JsonArray> jsonArrayCall = retrofitInterface.getArrayRatingData(url, ratingId);
-        jsonArrayCall.enqueue(this);
-
-    }
 }
