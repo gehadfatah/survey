@@ -52,10 +52,16 @@ public class SurveyActivity extends AppCompatActivity implements IActiveSurveyVi
                     WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
             );
         }*/
-
+        setListener();
         activeSurveyPresenter = new ActiveSurveyPresenter(this);
         getActiveSurvey();
         intent = new Intent(this, SurveyOptionActivity.class);
+    }
+
+    private void setListener() {
+        textView1.setOnClickListener(this);
+        textView2.setOnClickListener(this);
+        textView3.setOnClickListener(this);
     }
 
     public void getActiveSurvey() {
@@ -95,8 +101,8 @@ public class SurveyActivity extends AppCompatActivity implements IActiveSurveyVi
     @Override
     public void failedGetSurvey(String messege) {
         if (messege != null) {
-            if (messege.contains("Failed to connect"))
-                Toast.makeText(this, getResources().getString(R.string.checkInternet), Toast.LENGTH_SHORT).show();
+            if (messege.contains("Failed to connect")||messege.contains("Unable to resolve host"))
+                Toast.makeText(SurveyApp.newInstance().getSurveyContext(), getResources().getString(R.string.checkInternet), Toast.LENGTH_SHORT).show();
 
         }
 
@@ -104,7 +110,21 @@ public class SurveyActivity extends AppCompatActivity implements IActiveSurveyVi
 
     @Override
     public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.firstStatusTv:
+                firstRelClick(v);
 
+
+                break;
+            case R.id.secondStatusTv:
+                secondRelClick(v);
+
+                break;
+            case R.id.thirdStatusTv:
+                thirdRelClick(v);
+                break;
+
+        }
     }
 
     public void thirdRelClick(View view) {

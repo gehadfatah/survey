@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-import io.reactivex.Observable;
 import okhttp3.Cache;
 import okhttp3.Interceptor;
 import okhttp3.MultipartBody;
@@ -27,7 +26,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
@@ -67,7 +65,7 @@ public class RestClientRetrofit {
 
         retrofit = new Retrofit.Builder().
                 addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+
 
                 //you can add here any url as you like
                 .baseUrl(context.getResources().getString(R.string.base_url))

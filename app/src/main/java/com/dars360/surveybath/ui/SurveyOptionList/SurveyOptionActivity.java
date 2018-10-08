@@ -162,6 +162,7 @@ public class SurveyOptionActivity extends AppCompatActivity implements ISurveyOp
             }*/
             rbn.setId(RatingOptionList.get(i).getID());
             rbn.setText(RatingOptionList.get(i).getTitle());
+            rbn.setTextSize(18);
             //rbn.setMaxLines(1);
 
 
